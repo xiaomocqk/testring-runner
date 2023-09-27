@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 export class CodeLensProvider implements vscode.CodeLensProvider {
     private _FILE_MATCH_REG = /\.testdata\.json$/
     private _LINE_MATCH_REG = /"tags":\s*\[/g
+    private _LINE_MATCH_API_REG = /"testData":\s*\[\{\}\]/
 
     provideCodeLenses(document: vscode.TextDocument, token: vscode.CancellationToken): vscode.ProviderResult<vscode.CodeLens[]> {
         // handle with "*.testdata.json" only
@@ -11,12 +12,20 @@ export class CodeLensProvider implements vscode.CodeLensProvider {
         }
         const codeLenses: vscode.CodeLens[] = [];
         const text = document.getText();
-        const totalTests = JSON.parse(text).testData.length
+        const textParsed = JSON.parse(text)
+        const totalTests = textParsed.testData.length
         const test = document.fileName.replace(this._FILE_MATCH_REG, '.js');
         const testName = test.match(/[^/]+(?=.js$)/)
         let match: RegExpExecArray | null;
         let runNumber = -2;
-        while ((match = this._LINE_MATCH_REG.exec(text)) !== null) {
+        // API
+        const isApiOnly = textParsed.tags.includes('#No_Brands_Run');
+        let isContinue = true
+    
+        while (isContinue && ((match = (isApiOnly ? this._LINE_MATCH_API_REG : this._LINE_MATCH_REG).exec(text)) !== null)) {
+            if (isApiOnly) {
+                runNumber = -1;
+            }
             if (++runNumber === -1) {
                 continue
             }
@@ -41,6 +50,9 @@ export class CodeLensProvider implements vscode.CodeLensProvider {
                 arguments: [{ test, runNumber, testName }],
             });
             codeLenses.push(tooltip, runCodeLens, debugCodeLens);
+            if (isApiOnly) {
+                isContinue = false;
+            }
         }
 
         return codeLenses;
