@@ -2,7 +2,7 @@
   "name": "testring-runner",
   "displayName": "Testring Runner",
   "description": "",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "publisher": "xiaomocqk",
   "repository": "https://github.com/xiaomocqk/testring-runner",
   "engines": {
@@ -16,13 +16,6 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "extension.config",
-        "icon": "$(eye)",
-        "title": "配置信息"
-      }
-    ],
     "menus": {
       "editor/title": [
         {
