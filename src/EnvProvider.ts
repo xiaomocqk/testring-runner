@@ -5,7 +5,7 @@ import * as fs from "fs";
 const LAST_SELECTED_ENV = "LAST_SELECTED_ENV";
 
 export class EnvProvider {
-  command = "extension.envPick";
+  command = "testring.env.picker";
   selected: string;
 
   private _rememberLastEnv = true;

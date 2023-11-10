@@ -7,7 +7,7 @@ import { spawn } from "child_process";
 
 export interface ITestArgs {
   test: string;
-  runNumber: number;
+  index: number;
   testName: string;
 }
 
@@ -37,36 +37,31 @@ export class Model {
     });
   }
 
-  runTest({ test, runNumber, testName }: ITestArgs) {
+  runTest({ test, index, testName }: ITestArgs) {
     if (!this._env.selected) {
       vscode.commands.executeCommand(this._env.command);
       return;
     }
-    const argsString = this._getArgs({ test, runNumber }).join(" ");
+    const argsString = this._getArgs({ test, index }).join(" ");
     this._terminal?.dispose();
     this._terminal = vscode.window.createTerminal({
-      name: runNumber + 1 + "#" + testName,
+      name: index + 1 + "#" + testName,
     });
     this._terminal.sendText(`node runner.js ${argsString}`);
     this._terminal.show();
   }
 
-  async debugTest({ test, runNumber, testName }: ITestArgs) {
+  async debugTest({ test, index, testName }: ITestArgs) {
     if (!this._env.selected) {
       vscode.commands.executeCommand(this._env.command);
       return;
     }
 
-    // this._terminal = vscode.window.createTerminal({
-    //   name: runNumber + 1 + "#" + testName,
-    // });
-
-    // const nodePath = await findNode();
     // https://code.visualstudio.com/docs/nodejs/nodejs-debugging
     const debugConfig: vscode.DebugConfiguration = {
       type: "node",
       // runtimeExecutable: nodePath,
-      name: runNumber + 1 + "#" + testName,
+      name: index + 1 + "#" + testName,
       request: "launch",
       console: "integratedTerminal",
       cwd: "${workspaceRoot}",
@@ -76,7 +71,7 @@ export class Model {
       // remoteRoot: "${workspaceFolder}",
       localRoot: "${workspaceRoot}",
       smartStep: true,
-      // "runtimeArgs": ["--preserve-symlinks"],
+      runtimeArgs: ["--preserve-symlinks"],
       // sourceMapPathOverrides: "${workspaceFolder}/tests-src/**/*.js",
       outFiles: [
         // "${workspaceFolder}/flows/**/*.js",
@@ -84,7 +79,7 @@ export class Model {
         // "${workspaceFolder}/node_modules/@testring/**/*.js",
         // "${workspaceFolder}/node_modules/@testring-dev/**/*.js",
       ],
-      args: this._getArgs({ test, runNumber }),
+      args: this._getArgs({ test, index }),
     };
 
     vscode.debug.startDebugging(
@@ -94,7 +89,7 @@ export class Model {
   }
 
 
-  private _getArgs({ test, runNumber }: Omit<ITestArgs, "testName">) {
+  private _getArgs({ test, index }: Omit<ITestArgs, "testName">) {
     return [
       "run",
       "--config=.testringrc.js",
@@ -102,7 +97,7 @@ export class Model {
       "--retry-count=0",
       `--tests=${test}`,
       `--env-config=./configs/${this._env.selected}.json`,
-      `--rc.run-number=${runNumber}`,
+      `--rc.run-number=${index}`,
       // `--rc.hub-url=xmn02-i01-hpc02.lab.nordigy.ru`,
       // `--rc.hub-port=4444`
     ];

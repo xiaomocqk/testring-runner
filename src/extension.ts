@@ -20,8 +20,8 @@ export function activate(context: vscode.ExtensionContext) {
   
   context.subscriptions.push(
     vscode.languages.registerCodeLensProvider({ scheme: 'file', language: 'json' }, codeLens),
-    vscode.commands.registerCommand('extension.runTest', (args: ITestArgs) => model.runTest(args)),
-    vscode.commands.registerCommand('extension.debugTest', (args: ITestArgs) => model.debugTest(args)),
+    vscode.commands.registerCommand('testring.runTest', (args: ITestArgs) => model.runTest(args)),
+    vscode.commands.registerCommand('testring.debugTest', (args: ITestArgs) => model.debugTest(args)),
   );
   fn(context)
 }
