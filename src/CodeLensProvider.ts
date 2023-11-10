@@ -15,7 +15,7 @@ export class CodeLensProvider implements vscode.CodeLensProvider {
         const codeLenses: vscode.CodeLens[] = [];
         const text = document.getText();
         let test = document.fileName.replace(FILE_MATCH_REG, '.js');
-        let testName = test.match(/[^/]+(?=.js$)/)![0]
+        let [testName] = test.match(/[^/]+(?=.js$)/)!;
         const AST = babel.parseExpression(text) as any
         const testData = AST.properties.find((p: any) => p.key.value === 'testData')
         let testCounts = testData.value.elements.length;
@@ -30,6 +30,8 @@ export class CodeLensProvider implements vscode.CodeLensProvider {
                 // When current file is *__1.testdata.json
                 if (isCurrentWiredFile) {
                     const normalFile = document.fileName.replace('__1', '');
+                    test = test.replace('__1', '');
+                    testName = testName.replace('__1', '');
                     file = normalFile;
                 } else {
                     file = wiredFile;
