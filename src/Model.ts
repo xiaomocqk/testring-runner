@@ -71,7 +71,7 @@ export class Model {
       // remoteRoot: "${workspaceFolder}",
       localRoot: "${workspaceRoot}",
       smartStep: true,
-      runtimeArgs: ["--preserve-symlinks"],
+      // runtimeArgs: ["--preserve-symlinks"],
       // sourceMapPathOverrides: "${workspaceFolder}/tests-src/**/*.js",
       outFiles: [
         // "${workspaceFolder}/flows/**/*.js",

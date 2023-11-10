@@ -2,7 +2,7 @@
   "name": "testring-runner",
   "displayName": "Testring Runner",
   "description": "",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "publisher": "xiaomocqk",
   "repository": "https://github.com/xiaomocqk/testring-runner",
   "engines": {
@@ -22,7 +22,7 @@
     "pretest": "pnpm run compile && pnpm run lint",
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js",
-    "packages": "vsce package"
+    "package": "vsce package"
   },
   "devDependencies": {
     "@babel/types": "^7.23.3",
